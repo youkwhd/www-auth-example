@@ -37,17 +37,12 @@ func main() {
         })
     })
 
-    app.Post("/login", func(c *fiber.Ctx) error {
+    app.Post("/login", middlewares.AuthRedirect, func(c *fiber.Ctx) error {
         fmt.Println("POST /login")
-
         user := user.User{}
 
         err := c.BodyParser(&user)
         if err != nil {
-            fmt.Println(err)
-
-            // should have message
-            // on why it failed
             return c.JSON(map[string]any{
                 "success": false,
             })
@@ -55,7 +50,6 @@ func main() {
 
         foundUser, found := db.Data.Users[user.Username]
         if !found {
-            fmt.Println(found)
             // user does not exist
             return c.JSON(map[string]any{
                 "success": false,
@@ -79,24 +73,12 @@ func main() {
         })
     })
 
-    app.Post("/register", func(c *fiber.Ctx) error {
+    app.Post("/register", middlewares.AuthRedirect, func(c *fiber.Ctx) error {
         fmt.Println("POST /register")
-        fromclient := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
-        fmt.Println(fromclient)
+        newUser := user.User{}
 
-        if fromclient != cookie.COOKIE_AUTH_NONE {
-            // already logged in
-            return c.JSON(map[string]any{
-                "success": true,
-            })
-        }
-
-        user := user.User{}
-
-        err := c.BodyParser(&user)
+        err := c.BodyParser(&newUser)
         if err != nil {
-            fmt.Println(err)
-
             // should have message
             // on why it failed
             return c.JSON(map[string]any{
@@ -104,7 +86,7 @@ func main() {
             })
         }
 
-        _, found := db.Data.Users[user.Username]
+        _, found := db.Data.Users[newUser.Username]
         if found {
             // user already exist
             return c.JSON(map[string]any{
@@ -112,11 +94,12 @@ func main() {
             })
         }
 
-        db.Data.Users.Add(user.Username, user.Password)
+        db.Data.Users.Add(newUser.Username, newUser.Password)
+        databaseUser := db.Data.Users[newUser.Username]
 
         cookie := cookie.NewAuthCookie()
-        tmp := db.Data.Users[user.Username]
-        db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
+        db.Data.Sessions.Add(cookie.Value, &databaseUser, cookie.Expires)
+
         c.Cookie(&cookie)
 
         return c.JSON(map[string]any{

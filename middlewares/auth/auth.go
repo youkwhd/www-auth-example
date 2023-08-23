@@ -6,7 +6,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func AuthRequired (c *fiber.Ctx) error {
+func AuthRedirect(c *fiber.Ctx) error {
+    clientCookie := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
+
+    if clientCookie != cookie.COOKIE_AUTH_NONE {
+        return c.JSON(map[string]any{
+            // TODO:
+            // Implement command to redirect
+            "success": true,
+        })
+    }
+
+    return c.Next()
+}
+
+func AuthRequired(c *fiber.Ctx) error {
     clientCookie := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
 
     if clientCookie == cookie.COOKIE_AUTH_NONE {
