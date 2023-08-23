@@ -2,40 +2,20 @@ package main
 
 import (
 	"fmt"
-	"time"
+
+	"www-auth-example/cookie"
+	"www-auth-example/middlewares/auth"
 
 	"www-auth-example/db"
 	"www-auth-example/db/user"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/google/uuid"
 )
 
-const (
-    COOKIE_AUTH = "AUTHSESSIONID" 
-    COOKIE_AUTH_NONE = "NONE"
-)
-
-func NewAuthCookie() *fiber.Cookie {
-    cookie := fiber.Cookie{}
-    cookie.Name = COOKIE_AUTH
-    cookie.Value = uuid.NewString() 
-    cookie.Path = "/"
-    
-    cookie.HTTPOnly = true
-
-    // see: <https://stackoverflow.com/questions/46288437/set-cookies-for-cross-origin-requests>
-    cookie.Secure = true
-    cookie.SameSite = "None"
-
-    cookie.Expires = time.Now().Add(30 * time.Second)
-    return &cookie
-}
 
 func main() {
     app := fiber.New()
-    database := db.Init()
 
     cors := cors.New(cors.Config{
         AllowOrigins: "http://localhost:8000, http://127.0.0.1:8000, http://0.0.0.0:8000",
@@ -45,25 +25,11 @@ func main() {
 
     app.Use(cors)
 
-    app.Get("/user", func(c *fiber.Ctx) error {
+    app.Get("/user", middlewares.AuthRequired, func(c *fiber.Ctx) error {
         fmt.Println("GET /user")
-        fromclient := c.Cookies(COOKIE_AUTH, COOKIE_AUTH_NONE)
 
-        // get db session
-        if fromclient == COOKIE_AUTH_NONE {
-            return c.JSON(map[string]any{
-                "success": false,
-            })
-        }
-
-        session, found := database.Sessions[fromclient]
-        fmt.Println(session)
-
-        if !found {
-            return c.JSON(map[string]any{
-                "success": false,
-            })
-        }
+        clientCookie := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
+        session := db.Data.Sessions[clientCookie]
 
         return c.JSON(map[string]any{
             "success": true,
@@ -73,14 +39,6 @@ func main() {
 
     app.Post("/login", func(c *fiber.Ctx) error {
         fmt.Println("POST /login")
-        fromclient := c.Cookies(COOKIE_AUTH, COOKIE_AUTH_NONE)
-
-        if fromclient != COOKIE_AUTH_NONE {
-            // already logged in
-            return c.JSON(map[string]any{
-                "success": false,
-            })
-        }
 
         user := user.User{}
 
@@ -95,7 +53,7 @@ func main() {
             })
         }
 
-        foundUser, found := database.Users[user.Username]
+        foundUser, found := db.Data.Users[user.Username]
         if !found {
             fmt.Println(found)
             // user does not exist
@@ -111,10 +69,10 @@ func main() {
             })
         }
 
-        cookie := NewAuthCookie()
-        tmp := database.Users[user.Username]
-        database.Sessions.Add(cookie.Value, &tmp)
-        c.Cookie(cookie)
+        cookie := cookie.NewAuthCookie()
+        tmp := db.Data.Users[user.Username]
+        db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
+        c.Cookie(&cookie)
 
         return c.JSON(map[string]any{
             "success": true,
@@ -123,10 +81,10 @@ func main() {
 
     app.Post("/register", func(c *fiber.Ctx) error {
         fmt.Println("POST /register")
-        fromclient := c.Cookies(COOKIE_AUTH, COOKIE_AUTH_NONE)
+        fromclient := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
         fmt.Println(fromclient)
 
-        if fromclient != COOKIE_AUTH_NONE {
+        if fromclient != cookie.COOKIE_AUTH_NONE {
             // already logged in
             return c.JSON(map[string]any{
                 "success": true,
@@ -146,7 +104,7 @@ func main() {
             })
         }
 
-        _, found := database.Users[user.Username]
+        _, found := db.Data.Users[user.Username]
         if found {
             // user already exist
             return c.JSON(map[string]any{
@@ -154,12 +112,12 @@ func main() {
             })
         }
 
-        database.Users.Add(user.Username, user.Password)
+        db.Data.Users.Add(user.Username, user.Password)
 
-        cookie := NewAuthCookie()
-        tmp := database.Users[user.Username]
-        database.Sessions.Add(cookie.Value, &tmp)
-        c.Cookie(cookie)
+        cookie := cookie.NewAuthCookie()
+        tmp := db.Data.Users[user.Username]
+        db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
+        c.Cookie(&cookie)
 
         return c.JSON(map[string]any{
             "success": true,
