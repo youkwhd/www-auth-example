@@ -1,6 +1,9 @@
 Web Authentication
 ==================
 
+DISCLAIMER: THIS PROJECT IS NOT COMPLETED YET, THIS REPO IS
+PUBLICLY AVAILABLE FROM THE FIRST COMMIT.
+
 An example of stateful session based authentication, talking
 between two different servers, Golang and any front-end.
 
