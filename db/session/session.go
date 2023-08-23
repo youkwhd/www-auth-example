@@ -28,6 +28,7 @@ func (s *Sessions) Get(id string) (*Session, error) {
     // Nevertheless, maybe something didn't go as expected in the browser,
     // so, double checking considered ok.
     if session.ExpiresIn.Sub(time.Now()) <= 0 {
+        delete(*s, id)
         return nil, errors.New("Session is expired")
     }
 
