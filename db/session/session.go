@@ -21,6 +21,12 @@ func (s *Sessions) Get(id string) (*Session, error) {
         return nil, errors.New("Session not found")
     }
 
+    // Checking and saving the state of a session would expires in is 
+    // kind of unnecessary, since the browser will clear off the cookie
+    // automatically anyway.
+    //
+    // Nevertheless, maybe something didn't go as expected in the browser,
+    // so, double checking considered ok.
     if session.ExpiresIn.Sub(time.Now()) <= 0 {
         return nil, errors.New("Session is expired")
     }
