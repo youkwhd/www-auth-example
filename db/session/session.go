@@ -21,7 +21,7 @@ func (s *Sessions) Get(id string) (*Session, error) {
         return nil, errors.New("Session not found")
     }
 
-    if time.Now().Sub(session.ExpiresIn) <= 0 {
+    if session.ExpiresIn.Sub(time.Now()) <= 0 {
         return nil, errors.New("Session is expired")
     }
 
