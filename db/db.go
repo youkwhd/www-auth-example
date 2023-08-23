@@ -5,6 +5,8 @@ import (
     "www-auth-example/db/session"
 )
 
+var Data Database = Init()
+
 type Database struct {
     Users user.Users
     Sessions session.Sessions
