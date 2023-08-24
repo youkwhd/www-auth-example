@@ -1,0 +1,92 @@
+:root {
+    --color-dark: #181a1b;
+    --color-gray: #3d3d3d;
+    --color-white: #ffffff;
+    --color-blue: #8cb4ff;
+    --color-dark-blue: #0b4cef;
+    --color-red: #fc2605;
+}
+
+html {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+}
+
+nav {
+    margin: 20px 0px;
+    padding: 5px 0px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav a {
+    text-decoration: none;
+}
+
+nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.nav-left li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.nav-right li {
+    display: inline;
+    margin-left: 10px;
+}
+
+a {
+    color: var(--color-blue);
+}
+
+body {
+    margin: 10px auto;
+    padding: 0px 20px;
+    max-width: 600px;
+}
+
+input {
+    display: block;
+    width: 100%;
+    background-color: black;
+    color: var(--color-white);
+    border-radius: 0;
+    border: 1px solid var(--color-gray);
+    min-height: 25px;
+    padding: 3px 5px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin: 10px 0px;
+}
+
+.form-group input {
+    margin-top: 5px;
+}
+
+.form-required {
+    color: var(--color-red);
+}
+
+button {
+    cursor: pointer;
+    background-color: var(--color-dark-blue);
+    color: var(--color-white);
+    border: 1px solid var(--color-black);
+    padding: 5px;
+    margin: 5px 0px;
+}
+
+h1 {
+    margin: 10px 0px;
+    font-size: 26px;
+}

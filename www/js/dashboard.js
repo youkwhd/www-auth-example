@@ -1,13 +1,20 @@
-window.onload = async () => {
-    const response = await fetch("http://localhost:3000/user", { 
-        credentials: "include",
-        method: "GET", 
-    });
+(async () => {
+    let data;
 
-    const data = await response.json();
+    try {
+        const response = await fetch("http://localhost:3000/user", { 
+            credentials: "include",
+            method: "GET", 
+        });
 
-    if (!data.success) {
-        window.location.assign("/register.html");
+        data = await response.json();
+
+        if (!data.success) {
+            window.location.assign("/login.html");
+            return;
+        }
+    } catch (err) {
+        window.location.assign("/login.html");
         return;
     }
 
@@ -16,17 +23,28 @@ window.onload = async () => {
      */
     const body = document.querySelector("body");
 
-    const headlineEl = document.createElement("h1");
+    let headlineEl = document.createElement("h1");
     headlineEl.innerText = "Dashboard";
 
-    const usernameEl = document.createElement("p");
-    usernameEl.innerText = "username: ";
+    let divEl = document.createElement("div");
+    divEl.className = "form-group";
 
-    const boldEl = document.createElement("strong");
-    boldEl.innerText = data.username;
+    let horizontalLineEl = document.createElement("hr");
+    let formEl = document.createElement("form");
 
-    usernameEl.appendChild(boldEl);
+    let labelEl = document.createElement("label");
+    labelEl.innerText = "Username";
+
+    let inputEl = document.createElement("input");
+    inputEl.readOnly = true;
+    inputEl.value = data.username;
+
+    divEl.appendChild(labelEl);
+    divEl.appendChild(inputEl);
+
+    formEl.appendChild(divEl);
 
     body.appendChild(headlineEl);
-    body.appendChild(usernameEl);
-}
+    body.appendChild(horizontalLineEl);
+    body.appendChild(formEl);
+})();
