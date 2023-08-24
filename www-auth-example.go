@@ -43,8 +43,11 @@ func main() {
 
     app.Use(cors)
 
-    app.Get("/logout", func(c *fiber.Ctx) error {
+    app.Get("/logout", middlewares.AuthRequired, func(c *fiber.Ctx) error {
         fmt.Println("GET /logout")
+
+        clientCookie := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
+        delete(db.Data.Sessions, clientCookie)
 
         cookie := cookie.NewAuthCookie(0)
         c.Cookie(&cookie)
