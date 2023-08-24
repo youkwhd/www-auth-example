@@ -11,6 +11,15 @@ This implementation will still be valid if you decided to only
 deploy the user interface by just a simple templating language,
 assuming you know what you're doing.
 
+Database Mocking
+----------------
+
+Why not use real database?
+
+Because it is easier to just mock it, no need to install or setup
+anything. The project is simple enough, you can just delete the
+db/ folder and configure your own SQL/NoSQL database.
+
 User Interface
 --------------
 
