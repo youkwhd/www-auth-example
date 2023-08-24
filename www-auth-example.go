@@ -45,7 +45,13 @@ func main() {
         fmt.Println("GET /user")
 
         clientCookie := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
-        session := db.Data.Sessions[clientCookie]
+        session, err := db.Data.Sessions.Get(clientCookie)
+
+        if err != nil {
+            return c.JSON(map[string]any{
+                "success": false,
+            })
+        }
 
         return c.JSON(map[string]any{
             "success": true,
@@ -81,6 +87,7 @@ func main() {
 
         cookie := cookie.NewAuthCookie(config.Cookie.ExpiredAfter)
         tmp := db.Data.Users[user.Username]
+
         db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
         c.Cookie(&cookie)
 
