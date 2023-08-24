@@ -16,10 +16,5 @@ func (u *Users) Add(username string, password string) {
 
 func Init() Users {
     u := Users{}
-
-    u.Add("youkwhd", "youkwhd")
-    u.Add("jake", "admin")
-    u.Add("admin", "admin")
-
     return u
 }
