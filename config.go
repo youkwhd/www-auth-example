@@ -46,7 +46,7 @@ func InitConfig() Config {
     return config;
 }
 
-func (c Config) AddUsers() {
+func (c Config) AddUsersToDatabase() {
     for _, val := range c.Database.Users {
         db.Data.Users.Add(val.Username, val.Password)
     }

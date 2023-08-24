@@ -17,7 +17,7 @@ func main() {
     app := fiber.New()
 
     config := InitConfig()
-    config.AddUsers()
+    config.AddUsersToDatabase()
 
     cors := cors.New(cors.Config{
         AllowOrigins: config.GenerateAllowedOrigins(),
