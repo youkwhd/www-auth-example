@@ -10,6 +10,13 @@ func AuthRedirect(c *fiber.Ctx) error {
     clientCookie := c.Cookies(cookie.COOKIE_AUTH, cookie.COOKIE_AUTH_NONE)
 
     if clientCookie != cookie.COOKIE_AUTH_NONE {
+        // if the client has a cookie but it's invalid
+        // then just continue off
+        _, err := db.Data.Sessions.Get(clientCookie)
+        if err != nil {
+            return c.Next()
+        }
+
         return c.JSON(map[string]any{
             // TODO:
             // Implement command to redirect
