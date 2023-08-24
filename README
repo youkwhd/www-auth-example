@@ -49,13 +49,10 @@ You can play with this behaviour via www/js/ files.
 3) Cookie Security
 ------------------
 
-No cookie should be visible by JavaScript nor the browser, you
-can always try this:
+No cookie should be visible by JavaScript, you can always try
+this:
     
     console.log(document.cookie)
-
-Or maybe check the cookie storage via browser. You should not
-find any cookie.
 
 4) Contributing
 ---------------
