@@ -3,6 +3,7 @@ module www-auth-example
 go 1.21.0
 
 require (
+	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/gofiber/fiber/v2 v2.48.0 // indirect
 	github.com/google/uuid v1.3.1 // indirect

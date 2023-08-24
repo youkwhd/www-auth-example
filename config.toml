@@ -1,0 +1,11 @@
+[cookie]
+# expired on how many MINUTE after the cookie was created
+expired_after = 1 # minute
+
+# pre-defined users so you can just log in without creating 
+# a new user everytime the server restarted
+[database]
+users = [{ username = "youkwhd", password = "youkwhd" }, { username = "admin", password = "admin" }]
+
+[frontend]
+urls = ["http://localhost:8000", "http://127.0.0.1:8000"]
