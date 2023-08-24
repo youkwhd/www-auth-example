@@ -29,15 +29,24 @@
     let divEl = document.createElement("div");
     divEl.className = "form-group";
 
+    let descriptionEl = document.createElement("p");
+    descriptionEl.innerText = "This is a user only page, you can see this if you are authenticated.";
+
     let horizontalLineEl = document.createElement("hr");
     let formEl = document.createElement("form");
 
     let labelEl = document.createElement("label");
-    labelEl.innerText = "Username";
+    labelEl.innerText = "Username ";
+
+    let readOnlyEl = document.createElement("span");
+    readOnlyEl.className = "read-only-msg";
+    readOnlyEl.innerText = "(Read Only)";
 
     let inputEl = document.createElement("input");
     inputEl.readOnly = true;
     inputEl.value = data.username;
+
+    labelEl.appendChild(readOnlyEl);
 
     divEl.appendChild(labelEl);
     divEl.appendChild(inputEl);
@@ -46,5 +55,6 @@
 
     body.appendChild(headlineEl);
     body.appendChild(horizontalLineEl);
+    body.appendChild(descriptionEl);
     body.appendChild(formEl);
 })();

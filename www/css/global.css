@@ -43,6 +43,10 @@ nav ul {
     margin-left: 10px;
 }
 
+.read-only-msg {
+    color: var(--color-gray);
+}
+
 a {
     color: var(--color-blue);
 }
@@ -63,6 +67,11 @@ input {
     min-height: 25px;
     padding: 3px 5px;
     font-size: 14px;
+    font-family: serif;
+}
+
+input[readonly] {
+    color: var(--color-gray);
 }
 
 .form-group {
