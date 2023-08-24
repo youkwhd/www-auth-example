@@ -54,7 +54,12 @@ this:
     
     console.log(document.cookie)
 
-4) Contributing
+4) Why not JWT
+--------------
+
+Because JWT is meant for authorization.
+
+5) Contributing
 ---------------
 
 I am more than happy to see if any description above got debunked
