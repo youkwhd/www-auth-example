@@ -5,7 +5,7 @@ An example of stateful session based authentication, talking
 between two different servers, Golang and any front-end.
 
 Any stand-alone front-end can communicate with the Go server,
-thanks to Javascript.
+thanks to JavaScript.
 
 This implementation will still be valid if you decided to only
 deploy the user interface by just a simple templating language,
@@ -45,3 +45,21 @@ cookie, otherwise if the configuration was not set to include, it
 would not send the cookie back to the Go server.
 
 You can play with this behaviour via www/js files.
+
+3) Cookie Security
+------------------
+
+No cookie should be visible by JavaScript nor the browser, you
+can always try this:
+    
+    console.log(document.cookie)
+
+Or maybe check the cookie storage via browser. You should not
+find any cookie.
+
+4) Contributing
+---------------
+
+I am more than happy to see if any description above got debunked
+and someone found a security leak. Please, if any, open some
+issues!
