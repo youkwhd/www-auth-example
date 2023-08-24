@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 
-	"www-auth-example/config"
-
 	"www-auth-example/cookie"
 	"www-auth-example/middlewares/auth"
 
@@ -15,28 +13,14 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
-
 func main() {
     app := fiber.New()
-    config.Init()
 
-    cookieExpiredAfter := config.Conf.Cookie.Expired_after
-
-    for _, val := range config.Conf.Database.Users {
-        db.Data.Users.Add(val.Username, val.Password)
-    }
-
-    allowedOrigins := ""
-    for idx, val := range config.Conf.Frontend.Urls {
-        allowedOrigins += val
-
-        if idx != len(config.Conf.Frontend.Urls) - 1 {
-            allowedOrigins += ", "
-        }
-    }
+    config := InitConfig()
+    config.AddUsers()
 
     cors := cors.New(cors.Config{
-        AllowOrigins: allowedOrigins,
+        AllowOrigins: config.GenerateAllowedOrigins(),
         AllowCredentials: true,
         AllowHeaders: "Origin, Content-Type, Accept",
     })
@@ -95,7 +79,7 @@ func main() {
             })
         }
 
-        cookie := cookie.NewAuthCookie(cookieExpiredAfter)
+        cookie := cookie.NewAuthCookie(config.Cookie.ExpiredAfter)
         tmp := db.Data.Users[user.Username]
         db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
         c.Cookie(&cookie)
@@ -129,7 +113,7 @@ func main() {
         db.Data.Users.Add(newUser.Username, newUser.Password)
         databaseUser := db.Data.Users[newUser.Username]
 
-        cookie := cookie.NewAuthCookie(cookieExpiredAfter)
+        cookie := cookie.NewAuthCookie(config.Cookie.ExpiredAfter)
         db.Data.Sessions.Add(cookie.Value, &databaseUser, cookie.Expires)
 
         c.Cookie(&cookie)
