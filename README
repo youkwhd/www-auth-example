@@ -4,6 +4,13 @@ Web Authentication
 An example of stateful session based authentication, talking
 between two different servers, Golang and any front-end.
 
+Any stand-alone front-end can communicate to the Go server,
+thanks to Javascript.
+
+This implementation will still be valid if you decided to only
+deploy the user interface by just a simple templating language,
+assuming you know what you're doing.
+
 User Interface
 --------------
 
