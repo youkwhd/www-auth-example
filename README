@@ -44,7 +44,7 @@ The fetch configuration mentioned above will then include the
 cookie, otherwise if the configuration was not set to include, it
 would not send the cookie back to the Go server.
 
-You can play with this behaviour via www/js files.
+You can play with this behaviour via www/js/ files.
 
 3) Cookie Security
 ------------------
