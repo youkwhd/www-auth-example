@@ -43,7 +43,7 @@ func InitConfig() Config {
         os.Exit(1)
     }
 
-    return config;
+    return config
 }
 
 func (c Config) AddUsersToDatabase() {
