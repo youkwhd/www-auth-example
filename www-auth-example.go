@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"www-auth-example/config"
+
 	"www-auth-example/cookie"
 	"www-auth-example/middlewares/auth"
 
@@ -16,14 +18,41 @@ import (
 
 func main() {
     app := fiber.New()
+    config.Init()
+
+    cookieExpiredAfter := config.Conf.Cookie.Expired_after
+
+    for _, val := range config.Conf.Database.Users {
+        db.Data.Users.Add(val.Username, val.Password)
+    }
+
+    allowedOrigins := ""
+    for idx, val := range config.Conf.Frontend.Urls {
+        allowedOrigins += val
+
+        if idx != len(config.Conf.Frontend.Urls) - 1 {
+            allowedOrigins += ", "
+        }
+    }
 
     cors := cors.New(cors.Config{
-        AllowOrigins: "http://localhost:8000, http://127.0.0.1:8000, http://0.0.0.0:8000",
+        AllowOrigins: allowedOrigins,
         AllowCredentials: true,
         AllowHeaders: "Origin, Content-Type, Accept",
     })
 
     app.Use(cors)
+
+    app.Get("/logout", func(c *fiber.Ctx) error {
+        fmt.Println("GET /logout")
+
+        cookie := cookie.NewAuthCookie(0)
+        c.Cookie(&cookie)
+
+        return c.JSON(map[string]any{
+            "success": true,
+        })
+    })
 
     app.Get("/user", middlewares.AuthRequired, func(c *fiber.Ctx) error {
         fmt.Println("GET /user")
@@ -63,7 +92,7 @@ func main() {
             })
         }
 
-        cookie := cookie.NewAuthCookie()
+        cookie := cookie.NewAuthCookie(cookieExpiredAfter)
         tmp := db.Data.Users[user.Username]
         db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
         c.Cookie(&cookie)
@@ -97,7 +126,7 @@ func main() {
         db.Data.Users.Add(newUser.Username, newUser.Password)
         databaseUser := db.Data.Users[newUser.Username]
 
-        cookie := cookie.NewAuthCookie()
+        cookie := cookie.NewAuthCookie(cookieExpiredAfter)
         db.Data.Sessions.Add(cookie.Value, &databaseUser, cookie.Expires)
 
         c.Cookie(&cookie)

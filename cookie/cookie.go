@@ -2,8 +2,9 @@ package cookie
 
 import (
 	"time"
-	"github.com/google/uuid"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 const (
@@ -11,7 +12,7 @@ const (
     COOKIE_AUTH_NONE = "NONE"
 )
 
-func NewAuthCookie() fiber.Cookie {
+func NewAuthCookie(duration int) fiber.Cookie {
     cookie := fiber.Cookie{}
     cookie.Name = COOKIE_AUTH
     cookie.Value = uuid.NewString() 
@@ -23,6 +24,7 @@ func NewAuthCookie() fiber.Cookie {
     cookie.Secure = true
     cookie.SameSite = "None"
 
-    cookie.Expires = time.Now().Add(10 * time.Second)
+    expiredAfter := time.Duration(duration) * time.Minute
+    cookie.Expires = time.Now().Add(expiredAfter)
     return cookie
 }
