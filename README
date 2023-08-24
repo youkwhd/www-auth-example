@@ -34,3 +34,14 @@ server:
     ./www/run.sh
 
 It should be listening at port 8000.
+
+Quick note on how this is possible: `fetch` will include the
+cookies that was sent from the Go server and sets them onto the
+browser's cookie. And from what I understand, you will always
+need to specify the configuration `credentials: "include"`.
+
+The fetch configuration mentioned above will then include the
+cookie, otherwise if the configuration was not set to include, it
+would not send the cookie back to the Go server.
+
+You can play with this behaviour via www/js files.
