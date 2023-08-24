@@ -46,6 +46,23 @@
     inputEl.readOnly = true;
     inputEl.value = data.username;
 
+    let logoutButtonEl = document.createElement("button");
+    logoutButtonEl.innerText = "Log out";
+
+    logoutButtonEl.addEventListener("click", async () => {
+        const response = await fetch("http://localhost:3000/logout", { 
+            credentials: "include",
+            method: "GET", 
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            window.location.assign("/index.html");
+            return;
+        }
+    });
+
     labelEl.appendChild(readOnlyEl);
 
     divEl.appendChild(labelEl);
@@ -57,4 +74,5 @@
     body.appendChild(horizontalLineEl);
     body.appendChild(descriptionEl);
     body.appendChild(formEl);
+    body.appendChild(logoutButtonEl);
 })();
