@@ -7,6 +7,12 @@ type User struct {
 
 type Users map[string]User
 
+// An abstraction but toleratable since session has the same.
+func (u *Users) Get(username string) (User, bool) {
+    user, found := (*u)[username]
+    return user, found
+}
+
 func (u *Users) Add(username string, password string) {
     (*u)[username] = User {
         Username: username,

@@ -70,7 +70,7 @@ func main() {
             })
         }
 
-        foundUser, found := db.Data.Users[user.Username]
+        foundUser, found := db.Data.Users.Get(user.Username)
         if !found {
             // user does not exist
             return c.JSON(map[string]any{
@@ -86,9 +86,8 @@ func main() {
         }
 
         cookie := cookie.NewAuthCookie(config.Cookie.ExpiredAfter)
-        tmp := db.Data.Users[user.Username]
+        db.Data.Sessions.Add(cookie.Value, &foundUser, cookie.Expires)
 
-        db.Data.Sessions.Add(cookie.Value, &tmp, cookie.Expires)
         c.Cookie(&cookie)
 
         return c.JSON(map[string]any{
@@ -109,7 +108,7 @@ func main() {
             })
         }
 
-        _, found := db.Data.Users[newUser.Username]
+        _, found := db.Data.Users.Get(newUser.Username)
         if found {
             // user already exist
             return c.JSON(map[string]any{
@@ -118,7 +117,7 @@ func main() {
         }
 
         db.Data.Users.Add(newUser.Username, newUser.Password)
-        databaseUser := db.Data.Users[newUser.Username]
+        databaseUser, _ := db.Data.Users.Get(newUser.Username)
 
         cookie := cookie.NewAuthCookie(config.Cookie.ExpiredAfter)
         db.Data.Sessions.Add(cookie.Value, &databaseUser, cookie.Expires)
