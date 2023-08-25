@@ -49,7 +49,7 @@ You can play with this behaviour via www/js/ files.
 3) Cookie Security
 ------------------
 
-Why not use JWT ?  Because JWT is meant for authorization.
+Why not use JWT? Because JWT is meant for authorization.
 
 No cookie should be visible by JavaScript, you can always try
 this:
