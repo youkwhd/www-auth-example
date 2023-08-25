@@ -49,18 +49,15 @@ You can play with this behaviour via www/js/ files.
 3) Cookie Security
 ------------------
 
+Why not use JWT ?  Because JWT is meant for authorization.
+
 No cookie should be visible by JavaScript, you can always try
 this:
     
     console.log(document.cookie)
 
-4) Why not JWT
---------------
-
-Because JWT is meant for authorization.
-
-5) Contributing
----------------
+5) Hacking
+----------
 
 I am more than happy to see if any description above got debunked
 and someone found a security leak. Please, if any, open some
